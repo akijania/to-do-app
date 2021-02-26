@@ -3,6 +3,7 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom';
 // import './styles/global.scss';
 import  MainLayout  from './components/layout/MainLayout/MainLayout';
 import  UserPage  from './components/views/UserPage/UserPage';
+import  NotFound  from './components/views/PageNotFound/PageNotFound';
 
 function App() {
   return (
@@ -14,7 +15,7 @@ function App() {
             {/* <Route exact path='/' component={Login} /> */}
             <Route exact path='/' component={UserPage} />
             {/* <Route exact path='/register' component={Register} /> */}
-            {/* <Route path='*' component={NotFound} /> */}
+            <Route path='*' component={NotFound} />
           </Switch>
         </MainLayout>
       </BrowserRouter>
