@@ -12,8 +12,7 @@ const Component = ({ className }) => (
   <div className={clsx(className, styles.root)}>
 
     <div className={styles.container}>
-      <h2>TO DO APP</h2>
-      <button>Logout</button>
+      <h2>to-do-app</h2>
     </div>
   </div>
 );

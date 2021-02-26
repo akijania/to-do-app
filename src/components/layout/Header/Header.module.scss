@@ -1,11 +1,14 @@
 @import "../../../styles/settings.scss";
 
 .root {
-  height: 20px;
+  height: 50px;
+  padding: 0 50px;
+  font-family: 'Open Sans', sans-serif;
+  color: #282c34;
+  
 }
 
 .container {
-  display: flex;
-  justify-content: space-between;
+text-align: center;
 }
 
