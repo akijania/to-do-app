@@ -8,20 +8,12 @@ const Registration = (className) => {
       <h2>Please register</h2>
       <form method="POST">
         <label>
-          <p>First name</p>
-          <input type="text" name="first-name" />
-        </label>
-        <label>
-          <p>Family name</p>
-          <input type="text" name="family-name"/>
+          <p>Username</p>
+          <input type="text" name="username" required />
         </label>
         <label>
           <p>E-mail</p>
           <input type="email" name="email" required />
-        </label>
-        <label>
-          <p>Username</p>
-          <input type="text" name="username" required />
         </label>
         <label>
           <p>Password</p>
