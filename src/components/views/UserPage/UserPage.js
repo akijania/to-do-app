@@ -22,10 +22,27 @@ class UserPage extends React.Component {
   }
 
   handleChange(event) {
+    
     this.setState({
       taskName: event.target.value,
     });
   }
+  handleChangeTask(taskId, event) {
+    const { tasks } = this.state;
+    
+    this.setState({
+      tasks: tasks.map((task) => {
+        if (task.id === taskId) {
+          return {
+            ...task,
+            name: event.target.value,
+          };
+        }
+        return { ...task };
+      }),
+    });
+  }
+
   addTask(taskId, taskName) {
     const { tasks } = this.state;
     this.setState({
@@ -44,6 +61,22 @@ class UserPage extends React.Component {
       tasks: updatedTasks,
     });
   }
+  editTask(event, taskId, taskName) {
+    event.preventDefault();
+    const { tasks } = this.state;
+    this.setState({
+      tasks: tasks.map((task) => {
+        if (task.id === taskId) {
+          return {
+            ...task,
+            name: taskName,
+          };
+        }
+        return { ...task };
+      }),
+      taskName: '',
+    });
+  }
 
   render() {
     const { tasks, taskName, className } = this.state;
@@ -57,13 +90,31 @@ class UserPage extends React.Component {
               ? ''
               : tasks.map((task) => (
                 <li key={task.id} className={styles.task}>
-                  {task.name}
-                  <button
-                    className={`${styles.btn} ${styles.btnRed}`}
-                    onClick={() => this.handleRemoveTask(task.id)}
-                  >
+                  <form id='add-task-form' onSubmit={(event) => this.editTask(event, task.id, task.name)}>
+                    <input
+                      className={styles.textInput}
+                      autoComplete='off'
+                      type='text'
+                      placeholder={task.name}
+                      id='task-name'
+                      value={task.name}
+                      onChange={(event) => this.handleChangeTask(task.id, event)}
+                    />
+ 
+                    <button
+                      className={`${styles.btn} ${styles.btnRed}`}
+                      onClick={() => this.handleRemoveTask(task.id)}
+                    >
                       Remove
-                  </button>
+                    </button>
+                    <button
+                      className={`${styles.btn} ${styles.btnGray}`}
+                      type='submit'
+                    >
+                      Edit
+                    </button>
+      
+                  </form>
                 </li>
               ))}
           </ul>
