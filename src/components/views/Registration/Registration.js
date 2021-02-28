@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './Registration.module.scss';
+import { Link } from 'react-router-dom';
 import clsx from 'clsx';
 import settings from '../../../data/settings.js';
 
@@ -49,14 +50,20 @@ class Registration extends React.Component {
       },
       body: JSON.stringify(payload),
     };
-    if (username != '' && email != '' && password != '' && repeatPassword != '') {
-      if (password === repeatPassword){
+    if (
+      username != '' &&
+      email != '' &&
+      password != '' &&
+      repeatPassword != ''
+    ) {
+      if (password === repeatPassword) {
         fetch(url, fetchOptions)
           .then(function (response) {
             return response.json();
           })
           .then(function (parsedResponse) {
             console.log('parsedResponse', parsedResponse);
+            alert(parsedResponse.message);
           });
       } else {
         alert('Your password is not equal to repeated password');
@@ -114,6 +121,9 @@ class Registration extends React.Component {
             </button>
           </div>
         </form>
+        <Link to="/">
+          <button className={styles.btn}>Login</button>
+        </Link>
       </div>
     );
   }

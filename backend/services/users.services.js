@@ -32,7 +32,7 @@ async function create(user){
   let message = 'Error in creating user';
 
   if (result.affectedRows) {
-    message = 'New user created successfully';
+    message = 'New user created successfully. Please log in';
   }
 
   return {message};

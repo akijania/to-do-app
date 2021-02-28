@@ -20,7 +20,7 @@ const Login = (className) => {
           <button className={styles.btn} type="submit">Submit</button>
         </div>
       </form>
-      <p>not registered yet? Please <Link exact to='/register'>Register</Link></p>
+      <p>not registered yet? Please <Link to='/register'>Register</Link></p>
     </div>
   );
 };
