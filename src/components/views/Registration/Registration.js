@@ -8,6 +8,7 @@ class Registration extends React.Component {
     username: '',
     email: '',
     password: '',
+    repeatPassword: '',
   };
   handleChangeUsername(event) {
     this.setState({
@@ -24,8 +25,13 @@ class Registration extends React.Component {
       password: event.target.value,
     });
   }
+  handleChangeRepeatPassword(event) {
+    this.setState({
+      repeatPassword: event.target.value,
+    });
+  }
   submitForm(event) {
-    const { username, email, password } = this.state;
+    const { username, email, password, repeatPassword } = this.state;
     event.preventDefault();
     const payload = {
       username,
@@ -43,14 +49,18 @@ class Registration extends React.Component {
       },
       body: JSON.stringify(payload),
     };
-    if (username != '' && email != '' && password != '') {
-      fetch(url, fetchOptions)
-        .then(function (response) {
-          return response.json();
-        })
-        .then(function (parsedResponse) {
-          console.log('parsedResponse', parsedResponse);
-        });
+    if (username != '' && email != '' && password != '' && repeatPassword != '') {
+      if (password === repeatPassword){
+        fetch(url, fetchOptions)
+          .then(function (response) {
+            return response.json();
+          })
+          .then(function (parsedResponse) {
+            console.log('parsedResponse', parsedResponse);
+          });
+      } else {
+        alert('Your password is not equal to repeated password');
+      }
     } else {
       alert('Please fill in required fields: username, email, password');
     }
@@ -87,6 +97,15 @@ class Registration extends React.Component {
               name="password"
               required
               onChange={(event) => this.handleChangePassword(event)}
+            />
+          </label>
+          <label>
+            <p>Repeat password</p>
+            <input
+              type="password"
+              name="repeatPassword"
+              required
+              onChange={(event) => this.handleChangeRepeatPassword(event)}
             />
           </label>
           <div>
