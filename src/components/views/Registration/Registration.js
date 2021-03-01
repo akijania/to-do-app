@@ -64,6 +64,7 @@ class Registration extends React.Component {
           .then(function (parsedResponse) {
             console.log('parsedResponse', parsedResponse);
             alert(parsedResponse.message);
+            window.location.replace('/');
           });
       } else {
         alert('Your password is not equal to repeated password');
