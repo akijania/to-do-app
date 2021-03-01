@@ -2,10 +2,10 @@ const db = require('./db');
 const helper = require('../helper');
 const config = require('../config');
 
-async function login(username, password) {
+async function login(user) {
   const userId = await db.query(
     `SELECT id FROM users WHERE username = ? AND password = ?`,
-    [username, password]
+    [user.username, user.password]
   );
   let message = 'Error in log in';
   if (userId.length === 0) {

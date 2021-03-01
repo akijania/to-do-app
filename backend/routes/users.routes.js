@@ -5,7 +5,7 @@ const users = require('../services/users.services');
 /* Login. */
 router.post('/login', async function(req, res, next) {
   try {
-    res.json(await users.login(req.body.username, req.body.password));
+    res.json(await users.login(req.body));
   } catch (err) {
     console.error(`Error while getting users `, err.message);
     next(err);
