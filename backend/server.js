@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const app = express();
 const port = 8000;
 const users = require('./routes/users.routes');
+const tasks = require('./routes/tasks.routes');
 
 app.use(bodyParser.json());
 app.use(cors());
@@ -19,6 +20,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/users', users);
+app.use('/tasks', tasks);
 
 const server = app.listen(port, () => {
   console.log(`App listening at http://localhost:${port}`);

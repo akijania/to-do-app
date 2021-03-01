@@ -12,7 +12,8 @@ async function login(user) {
     throw message;
   } else {
     message = 'You are successfully log in';
-    return {userId, message};}
+    return {userId, message};
+  }
 }
 
 async function create(user) {
