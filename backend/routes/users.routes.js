@@ -2,17 +2,17 @@ const express = require('express');
 const router = express.Router();
 const users = require('../services/users.services');
 
-/* GET all users. */
-router.get('/', async function(req, res, next) {
+/* Login. */
+router.post('/login', async function(req, res, next) {
   try {
-    res.json(await users.getMultiple(req.query.page));
+    res.json(await users.login(req.body.username, req.body.password));
   } catch (err) {
     console.error(`Error while getting users `, err.message);
     next(err);
   }
 });
 
-/* POST user. */
+/* Create user. */
 router.post('/', async function(req, res, next) {
   try {
     res.json(await users.create(req.body));
