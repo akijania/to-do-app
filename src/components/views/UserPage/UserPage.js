@@ -1,18 +1,26 @@
 import React from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import styles from './UserPage.module.scss';
+import Login from '../Login/Login';
+import { Link } from 'react-router-dom';
 import clsx from 'clsx';
-
 
 class UserPage extends React.Component {
   state = {
     tasks: [],
     taskName: '',
+    token: '',
   };
+  componentDidMount() {
+    const token = localStorage.getItem('token');
+    this.setState({
+      token: token,
+    });
+  }
 
   removeTask = (taskId) => {
     const { tasks } = this.state;
-    const tasksList = tasks.filter(task => task.id !== taskId );
+    const tasksList = tasks.filter((task) => task.id !== taskId);
     this.setState({
       tasks: tasksList,
     });
@@ -22,14 +30,13 @@ class UserPage extends React.Component {
   }
 
   handleChange(event) {
-    
     this.setState({
       taskName: event.target.value,
     });
   }
   handleChangeTask(taskId, event) {
     const { tasks } = this.state;
-    
+
     this.setState({
       tasks: tasks.map((task) => {
         if (task.id === taskId) {
@@ -79,66 +86,82 @@ class UserPage extends React.Component {
   }
 
   render() {
-    const { tasks, taskName, className } = this.state;
-    return (
-      <div className={clsx(className, styles.root)}>
-        <section className={styles.tasksSection} id='tasks-section'>
-          <h2>Tasks</h2>
+    const { tasks, taskName, className, token } = this.state;
+    if (!token) return <Login />;
+    else
+      return (
+        <div className={clsx(className, styles.root)}>
+          <section className={styles.tasksSection} id="tasks-section">
+            <h2>Tasks</h2>
 
-          <ul className={styles.tasksSection__list} id='tasks-list'>
-            {tasks === undefined || tasks.length < 1
-              ? ''
-              : tasks.map((task) => (
-                <li key={task.id} className={styles.task}>
-                  <form id='add-task-form' onSubmit={(event) => this.editTask(event, task.id, task.name)}>
-                    <input
-                      className={styles.textInput}
-                      autoComplete='off'
-                      type='text'
-                      placeholder={task.name}
-                      id='task-name'
-                      value={task.name}
-                      onChange={(event) => this.handleChangeTask(task.id, event)}
-                    />
- 
-                    <button
-                      className={`${styles.btn} ${styles.btnRed}`}
-                      onClick={() => this.handleRemoveTask(task.id)}
+            <ul className={styles.tasksSection__list} id="tasks-list">
+              {tasks === undefined || tasks.length < 1
+                ? ''
+                : tasks.map((task) => (
+                  <li key={task.id} className={styles.task}>
+                    <form
+                      id="add-task-form"
+                      onSubmit={(event) =>
+                        this.editTask(event, task.id, task.name)
+                      }
                     >
-                      Remove
-                    </button>
-                    <button
-                      className={`${styles.btn} ${styles.btnGray}`}
-                      type='submit'
-                    >
-                      Edit
-                    </button>
-      
-                  </form>
-                </li>
-              ))}
-          </ul>
+                      <input
+                        className={styles.textInput}
+                        autoComplete="off"
+                        type="text"
+                        placeholder={task.name}
+                        id="task-name"
+                        value={task.name}
+                        onChange={(event) =>
+                          this.handleChangeTask(task.id, event)
+                        }
+                      />
 
-          <form id='add-task-form' onSubmit={(event) => this.submitForm(event)}>
-            <input
-              className={styles.textInput}
-              autoComplete='off'
-              type='text'
-              placeholder='Type your description'
-              id='task-name'
-              value={taskName}
-              onChange={(event) => this.handleChange(event)}
-            />
-            <button className={styles.btn} type='submit'>
-              Add
-            </button>
-          </form>
-          <button className={`${styles.btn} ${styles.btnGray}`}>
-              Logout
-          </button>
-        </section>
-      </div>
-    );
+                      <button
+                        className={`${styles.btn} ${styles.btnRed}`}
+                        onClick={() => this.handleRemoveTask(task.id)}
+                      >
+                          Remove
+                      </button>
+                      <button
+                        className={`${styles.btn} ${styles.btnGray}`}
+                        type="submit"
+                      >
+                          Edit
+                      </button>
+                    </form>
+                  </li>
+                ))}
+            </ul>
+
+            <form
+              id="add-task-form"
+              onSubmit={(event) => this.submitForm(event)}
+            >
+              <input
+                className={styles.textInput}
+                autoComplete="off"
+                type="text"
+                placeholder="Type your description"
+                id="task-name"
+                value={taskName}
+                onChange={(event) => this.handleChange(event)}
+              />
+              <button className={styles.btn} type="submit">
+                Add
+              </button>
+            </form>
+            <Link to="/">
+              <button
+                className={`${styles.btn} ${styles.btnGray}`}
+                onClick={() => localStorage.clear()}
+              >
+                Logout
+              </button>
+            </Link>
+          </section>
+        </div>
+      );
   }
 }
 

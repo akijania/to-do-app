@@ -43,8 +43,8 @@ class Login extends React.Component {
           return response.json();
         })
         .then(function (parsedResponse) {
-          console.log('parsedResponse', parsedResponse.userId[0].id);
           window.location.replace(`/${parsedResponse.userId[0].id}`);
+          localStorage.setItem('token', parsedResponse.userId[0].id);
           alert(parsedResponse.message);
         });
     } else {
