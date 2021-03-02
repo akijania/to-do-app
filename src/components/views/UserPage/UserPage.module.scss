@@ -48,12 +48,18 @@ p {
   background: none;
   border: none;
   color: #fff;
-  border-bottom: 2px solid #0064e7;
   padding: 8px 25px 8px 5px;
   font-family: inherit;
   outline: none;
   opacity: 0.6;
   transition: .3s;
+  &:hover {
+    border-bottom: 2px solid #0064e7;
+  }
+}
+
+.textInputAdd {
+  border-bottom: 2px solid #0064e7;
 }
 
 .textInput:focus {

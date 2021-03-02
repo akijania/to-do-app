@@ -85,8 +85,8 @@ class Component extends React.Component {
               {tasks === undefined || tasks.length < 1
                 ? ''
                 : tasks.map((task) => (
-                  <li key={task.id} className={styles.task}>
-                    <form
+                  <li key={task.id}>
+                    <form className={styles.task}
                       id="add-task-form"
                       onSubmit={(event) =>
                         this.editTask(event, task.id, task.task)
@@ -103,19 +103,21 @@ class Component extends React.Component {
                           this.handleChangeTask(task.id, event)
                         }
                       />
-
-                      <button
-                        className={`${styles.btn} ${styles.btnRed}`}
-                        onClick={() => this.handleRemoveTask(task.id)}
-                      >
+                      <div>
+                        <button
+                          className={`${styles.btn} ${styles.btnGray}`}
+                          type="submit"
+                        >
+                          Save
+                        </button>
+                        <button
+                          className={`${styles.btn} ${styles.btnRed}`}
+                          onClick={() => this.handleRemoveTask(task.id)}
+                        >
                           Remove
-                      </button>
-                      <button
-                        className={`${styles.btn} ${styles.btnGray}`}
-                        type="submit"
-                      >
-                          Edit
-                      </button>
+                        </button>
+                      </div>
+            
                     </form>
                   </li>
                 ))}
@@ -126,7 +128,7 @@ class Component extends React.Component {
               onSubmit={(event) => this.submitForm(event)}
             >
               <input
-                className={styles.textInput}
+                className={`${styles.textInput} ${styles.textInputAdd}`}
                 autoComplete="off"
                 type="text"
                 placeholder="Type your description"
