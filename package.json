@@ -35,8 +35,9 @@
     "web-vitals": "^1.0.1"
   },
   "scripts": {
-    "start": "run-p start:*",
-    "start:backend": "cd backend && nodemon server.js",
+    "start": "cd backend && nodemon server.js",
+    "start-dev": "run-p start:*",
+    "start:backend": "cd backend && nodemon server.js",   
     "start-silent": "run-p start > /dev/null",
     "start:react": "react-scripts start",
     "start-and-test": "run-p start-silent test ",

@@ -20,10 +20,4 @@ describe('POST /users', async () => {
       .send({ username: '#Ania #3', password: 'alamakota' });
     expect(res.status).to.be.equal(200);
   });
-  it('/ should not find user in db and return message', async () => {
-    const res = await request(server)
-      .post('/users/login')
-      .send({ username: '#Ania #3ncaicnaic', password: 'alamakotancani' });
-    expect(res.status).to.be.equal(500);
-  });  
 });

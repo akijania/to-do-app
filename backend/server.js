@@ -1,8 +1,8 @@
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 const bodyParser = require('body-parser');
 const app = express();
-const port = 8000;
 const users = require('./routes/users.routes');
 const tasks = require('./routes/tasks.routes');
 
@@ -14,6 +14,7 @@ app.use(
     extended: true,
   })
 );
+app.use(express.static(path.join(__dirname, '../build')));
 
 app.get('/', (req, res) => {
   res.json({'message': 'ok'});
@@ -22,8 +23,12 @@ app.get('/', (req, res) => {
 app.use('/users', users);
 app.use('/tasks', tasks);
 
-const server = app.listen(port, () => {
-  console.log(`App listening at http://localhost:${port}`);
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../build/index.html'));
+});
+
+const server = app.listen(process.env.PORT || 8000, () => {
+  console.log('Server is running on port: 8000');
 });
 
 module.exports = server;

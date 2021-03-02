@@ -27,12 +27,14 @@ export const addTask = (payload) => ({ payload, type: ADD_TASK });
 export const removeTask = (payload) => ({ payload, type: REMOVE_TASK });
 export const editTask = (payload) => ({ payload, type: EDIT_TASK });
 
+export const API_URL = (process.env.NODE_ENV === 'production') ? '/tasks' : 'http://localhost:8000/tasks';
+
 /* thunk creators */
 export const fetchPublishedTasks = (userId) => {
   return (dispatch, getState) => {
     dispatch(fetchStarted({ name: 'LOAD_TASKS' }));
 
-    Axios.get(`http://localhost:8000/tasks/${userId}`)
+    Axios.get(`${API_URL}/${userId}`)
       .then((res) => {
         dispatch(loadTasks(Object.values(res.data)));
         dispatch(fetchSuccess({ name: 'LOAD_TASKS' }));
@@ -48,7 +50,7 @@ export const addTaskRequest = (data) => {
   return async (dispatch) => {
     dispatch(fetchStarted({ name: 'ADD_TASK' }));
     try {
-      await Axios.post(`http://localhost:8000/tasks`, data).then((res) => {
+      await Axios.post(`${API_URL}`, data).then((res) => {
         dispatch(addTask(res.data));
         dispatch(fetchSuccess({ name: 'ADD_TASK' }));
       });
@@ -61,7 +63,7 @@ export const removeTaskRequest = (id) => {
   return async (dispatch) => {
     dispatch(fetchStarted({ name: 'ADD_TASK' }));
     try {
-      await Axios.delete(`http://localhost:8000/tasks/${id}`);
+      await Axios.delete(`${API_URL}/${id}`);
       dispatch(removeTask(id));
       dispatch(fetchSuccess({ name: 'ADD_TASK' }));
     } catch (err) {
@@ -73,7 +75,7 @@ export const editTaskRequest = (data) => {
   return async (dispatch) => {
     dispatch(fetchStarted({ name: 'EDIT_TASK' }));
     try {
-      await Axios.put(`http://localhost:8000/tasks/${data.id}`, data);
+      await Axios.put(`${API_URL}/${data.id}`, data);
       dispatch(fetchSuccess({ name: 'EDIT_TASK' }));
     } catch (err) {
       dispatch(fetchError({ name: 'EDIT_TASK', error: err.message || true }));
