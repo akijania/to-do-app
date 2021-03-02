@@ -14,6 +14,7 @@ const FETCH_ERROR = createActionName('FETCH_ERROR');
 
 const LOAD_TASKS = createActionName('LOAD_TASKS');
 const ADD_TASK = createActionName('ADD_TASK');
+const REMOVE_TASK = createActionName('REMOVE_TASK');
 
 /* action creators */
 export const fetchStarted = (payload) => ({ payload, type: FETCH_START });
@@ -22,6 +23,7 @@ export const fetchError = (payload) => ({ payload, type: FETCH_ERROR });
 
 export const loadTasks = (payload) => ({ payload, type: LOAD_TASKS });
 export const addTask = (payload) => ({ payload, type: ADD_TASK });
+export const removeTask = (payload) => ({ payload, type: REMOVE_TASK });
 
 /* thunk creators */
 export const fetchPublishedTasks = (userId) => {
@@ -53,6 +55,18 @@ export const addTaskRequest = (data) => {
     }
   };
 };
+export const removeTaskRequest = (id) => {
+  return async (dispatch) => {
+    dispatch(fetchStarted({ name: 'ADD_TASK' }));
+    try {
+      await Axios.delete(`http://localhost:8000/tasks/${id}`);
+      dispatch(removeTask(id));
+      dispatch(fetchSuccess({ name: 'ADD_TASK' }));
+    } catch (err) {
+      dispatch(fetchError({ name: 'ADD_TASK', error: err.message || true }));
+    }
+  };
+};
 
 /* reducer */
 export const reducer = (statePart = [], action = {}) => {
@@ -61,6 +75,11 @@ export const reducer = (statePart = [], action = {}) => {
       return { ...statePart, data: [...action.payload] };
     case ADD_TASK:
       return { ...statePart, data: [...statePart.data, action.payload] };
+    case REMOVE_TASK:
+      return {
+        ...statePart,
+        data: statePart.data.filter((task) => task.id !== action.payload),
+      };
     case FETCH_START: {
       return {
         ...statePart,

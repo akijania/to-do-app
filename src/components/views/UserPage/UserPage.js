@@ -5,7 +5,7 @@ import Login from '../Login/Login';
 import { Link } from 'react-router-dom';
 import clsx from 'clsx';
 import { connect } from 'react-redux';
-import { getAllTasks, fetchPublishedTasks, addTaskRequest } from '../../../redux/tasksRedux';
+import { getAllTasks, fetchPublishedTasks, addTaskRequest, removeTaskRequest } from '../../../redux/tasksRedux';
 
 class Component extends React.Component {
   state = {
@@ -22,15 +22,9 @@ class Component extends React.Component {
     fetchPublishedTasks(token);
   }
 
-  removeTask = (taskId) => {
-    const { tasks } = this.state;
-    const tasksList = tasks.filter((task) => task.id !== taskId);
-    this.setState({
-      tasks: tasksList,
-    });
-  };
-  handleRemoveTask(taskId) {
-    this.removeTask(taskId);
+  handleRemoveTask = (taskId) => {
+    const {removeTaskRequest} = this.props;
+    removeTaskRequest(taskId);
   }
 
   handleChange(event) {
@@ -53,7 +47,7 @@ class Component extends React.Component {
       }),
     });
   }
-  
+
   submitForm(event) {
     const { taskName, token } = this.state;
     const {addTaskRequest} = this.props;
@@ -174,6 +168,7 @@ Component.propTypes = {
   tasks: PropTypes.array,
   fetchPublishedTasks: PropTypes.func,
   addTaskRequest: PropTypes.func,
+  removeTaskRequest: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({
@@ -183,6 +178,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   fetchPublishedTasks: (token) => dispatch(fetchPublishedTasks(token)),
   addTaskRequest: (task) => dispatch(addTaskRequest(task)),
+  removeTaskRequest: (id) => dispatch(removeTaskRequest(id)),
 });
 
 const Container = connect(mapStateToProps, mapDispatchToProps)(Component);
