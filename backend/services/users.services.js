@@ -8,12 +8,13 @@ async function login(user) {
     [user.username, user.password]
   );
   let message = 'Error in log in';
-  if (userId.length === 0) {
-    throw message;
+  if (userId == false) {
+    return message;
   } else {
     message = 'You are successfully log in';
     return {userId, message};
   }
+ 
 }
 
 async function create(user) {

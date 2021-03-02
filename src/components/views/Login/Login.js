@@ -43,9 +43,15 @@ class Login extends React.Component {
           return response.json();
         })
         .then(function (parsedResponse) {
-          window.location.replace(`/${parsedResponse.userId[0].id}`);
-          localStorage.setItem('token', parsedResponse.userId[0].id);
-          alert(parsedResponse.message);
+          if (parsedResponse.userId) {
+            window.location.replace(`/${parsedResponse.userId[0].id}`);
+            localStorage.setItem('token', parsedResponse.userId[0].id);
+            alert(parsedResponse.message);
+          } else {
+            alert(
+              'Problem with log in. Check if your username and password are correct'
+            );
+          }
         });
     } else {
       alert('Please fill in required fields: username and password');
