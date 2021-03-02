@@ -5,16 +5,22 @@ import Login from '../Login/Login';
 import { Link } from 'react-router-dom';
 import clsx from 'clsx';
 import { connect } from 'react-redux';
-import { getAllTasks, fetchPublishedTasks, addTaskRequest, removeTaskRequest } from '../../../redux/tasksRedux';
+import {
+  getAllTasks,
+  fetchPublishedTasks,
+  addTaskRequest,
+  removeTaskRequest,
+  editTask,
+  editTaskRequest,
+} from '../../../redux/tasksRedux';
 
 class Component extends React.Component {
   state = {
-    tasks: [],
     taskName: '',
     token: '',
   };
   componentDidMount() {
-    const {fetchPublishedTasks} = this.props;
+    const { fetchPublishedTasks } = this.props;
     const token = localStorage.getItem('token');
     this.setState({
       token: token,
@@ -23,34 +29,25 @@ class Component extends React.Component {
   }
 
   handleRemoveTask = (taskId) => {
-    const {removeTaskRequest} = this.props;
+    const { removeTaskRequest } = this.props;
     removeTaskRequest(taskId);
-  }
+  };
 
   handleChange(event) {
     this.setState({
       taskName: event.target.value,
     });
   }
-  handleChangeTask(taskId, event) {
-    const { tasks } = this.state;
+  handleChangeTask(id, event) {
+    const { editTask } = this.props;
+    let name = event.target.value;
+    editTask({id, name});
 
-    this.setState({
-      tasks: tasks.map((task) => {
-        if (task.id === taskId) {
-          return {
-            ...task,
-            name: event.target.value,
-          };
-        }
-        return { ...task };
-      }),
-    });
   }
 
   submitForm(event) {
     const { taskName, token } = this.state;
-    const {addTaskRequest} = this.props;
+    const { addTaskRequest } = this.props;
     const data = {
       task: taskName,
       userId: token,
@@ -66,27 +63,17 @@ class Component extends React.Component {
       tasks: updatedTasks,
     });
   }
-  editTask(event, taskId, taskName) {
+  editTask(event, id, task) {
+    const { editTaskRequest } = this.props;
     event.preventDefault();
-    const { tasks } = this.state;
-    this.setState({
-      tasks: tasks.map((task) => {
-        if (task.id === taskId) {
-          return {
-            ...task,
-            name: taskName,
-          };
-        }
-        return { ...task };
-      }),
-      taskName: '',
-    });
+    editTaskRequest({id, task});
+  
+    
   }
 
   render() {
     const { taskName, className, token } = this.state;
-    const {tasks} = this.props;
-    console.log('taski', tasks);
+    const { tasks } = this.props;
     if (!token) return <Login />;
     else
       return (
@@ -110,7 +97,7 @@ class Component extends React.Component {
                         autoComplete="off"
                         type="text"
                         placeholder={task.task}
-                        id="task-name"
+                        id={task.id}
                         value={task.task}
                         onChange={(event) =>
                           this.handleChangeTask(task.id, event)
@@ -169,6 +156,8 @@ Component.propTypes = {
   fetchPublishedTasks: PropTypes.func,
   addTaskRequest: PropTypes.func,
   removeTaskRequest: PropTypes.func,
+  editTask: PropTypes.func,
+  editTaskRequest: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({
@@ -179,9 +168,11 @@ const mapDispatchToProps = (dispatch) => ({
   fetchPublishedTasks: (token) => dispatch(fetchPublishedTasks(token)),
   addTaskRequest: (task) => dispatch(addTaskRequest(task)),
   removeTaskRequest: (id) => dispatch(removeTaskRequest(id)),
+  editTask: (value) => dispatch(editTask(value)),
+  editTaskRequest: (value) => dispatch(editTaskRequest(value)),
+  
 });
 
 const Container = connect(mapStateToProps, mapDispatchToProps)(Component);
 
 export { Container as UserPage, Component as UserPageComponent };
-
