@@ -1,21 +1,26 @@
 import React from 'react';
 import { v4 as uuidv4 } from 'uuid';
+import PropTypes from 'prop-types';
 import styles from './UserPage.module.scss';
 import Login from '../Login/Login';
 import { Link } from 'react-router-dom';
 import clsx from 'clsx';
+import { connect } from 'react-redux';
+import { getAllTasks, fetchPublishedTasks } from '../../../redux/tasksRedux';
 
-class UserPage extends React.Component {
+class Component extends React.Component {
   state = {
     tasks: [],
     taskName: '',
     token: '',
   };
   componentDidMount() {
+    const {fetchPublishedTasks} = this.props;
     const token = localStorage.getItem('token');
     this.setState({
       token: token,
     });
+    fetchPublishedTasks(token);
   }
 
   removeTask = (taskId) => {
@@ -86,7 +91,9 @@ class UserPage extends React.Component {
   }
 
   render() {
-    const { tasks, taskName, className, token } = this.state;
+    const { taskName, className, token } = this.state;
+    const {tasks} = this.props;
+    console.log('taski', tasks);
     if (!token) return <Login />;
     else
       return (
@@ -102,16 +109,16 @@ class UserPage extends React.Component {
                     <form
                       id="add-task-form"
                       onSubmit={(event) =>
-                        this.editTask(event, task.id, task.name)
+                        this.editTask(event, task.id, task.task)
                       }
                     >
                       <input
                         className={styles.textInput}
                         autoComplete="off"
                         type="text"
-                        placeholder={task.name}
+                        placeholder={task.task}
                         id="task-name"
-                        value={task.name}
+                        value={task.task}
                         onChange={(event) =>
                           this.handleChangeTask(task.id, event)
                         }
@@ -164,5 +171,20 @@ class UserPage extends React.Component {
       );
   }
 }
+Component.propTypes = {
+  tasks: PropTypes.array,
+  fetchPublishedTasks: PropTypes.func,
+};
 
-export default UserPage;
+const mapStateToProps = (state) => ({
+  tasks: getAllTasks(state),
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  fetchPublishedTasks: (token) => dispatch(fetchPublishedTasks(token)),
+});
+
+const Container = connect(mapStateToProps, mapDispatchToProps)(Component);
+
+export { Container as UserPage, Component as UserPageComponent };
+

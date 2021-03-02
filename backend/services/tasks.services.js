@@ -9,11 +9,9 @@ async function getTasks(page = 1, userId){
     [userId, offset, config.listPerPage]
   );
   const data = helper.emptyOrRows(rows);
-  const meta = {page};
 
   return {
-    data,
-    meta,
+    ...data,
   };
 }
 
