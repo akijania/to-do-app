@@ -30,7 +30,11 @@ async function create(tasks) {
     message = 'New task created successfully';
   }
 
-  return { message };
+  return {
+    id: result.insertId,
+    task: tasks.task,
+    userId: tasks.userId,
+  };
 }
 
 async function update(id, tasks){

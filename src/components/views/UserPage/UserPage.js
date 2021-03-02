@@ -1,12 +1,11 @@
 import React from 'react';
-import { v4 as uuidv4 } from 'uuid';
 import PropTypes from 'prop-types';
 import styles from './UserPage.module.scss';
 import Login from '../Login/Login';
 import { Link } from 'react-router-dom';
 import clsx from 'clsx';
 import { connect } from 'react-redux';
-import { getAllTasks, fetchPublishedTasks } from '../../../redux/tasksRedux';
+import { getAllTasks, fetchPublishedTasks, addTaskRequest } from '../../../redux/tasksRedux';
 
 class Component extends React.Component {
   state = {
@@ -54,19 +53,19 @@ class Component extends React.Component {
       }),
     });
   }
-
-  addTask(taskId, taskName) {
-    const { tasks } = this.state;
+  
+  submitForm(event) {
+    const { taskName, token } = this.state;
+    const {addTaskRequest} = this.props;
+    const data = {
+      task: taskName,
+      userId: token,
+    };
+    event.preventDefault();
+    addTaskRequest(data);
     this.setState({
-      tasks: [...tasks, { id: taskId, name: taskName }],
       taskName: '',
     });
-  }
-  submitForm(event) {
-    const { taskName } = this.state;
-    const taskId = uuidv4();
-    event.preventDefault();
-    this.addTask(taskId, taskName);
   }
   updateTask(updatedTasks) {
     this.setState({
@@ -174,6 +173,7 @@ class Component extends React.Component {
 Component.propTypes = {
   tasks: PropTypes.array,
   fetchPublishedTasks: PropTypes.func,
+  addTaskRequest: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({
@@ -182,6 +182,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   fetchPublishedTasks: (token) => dispatch(fetchPublishedTasks(token)),
+  addTaskRequest: (task) => dispatch(addTaskRequest(task)),
 });
 
 const Container = connect(mapStateToProps, mapDispatchToProps)(Component);
