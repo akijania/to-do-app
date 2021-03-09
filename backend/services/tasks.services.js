@@ -1,79 +1,92 @@
-const db = require('./db');
-const helper = require('../helper');
-const config = require('../config');
+const db = require('../models');
+const Task = db.tasks;
 
-async function getTasks(page = 1, userId){
-  const offset = helper.getOffset(page, config.listPerPage);
-  const rows = await db.query(
-    `SELECT id, task FROM tasks WHERE user_id = ? LIMIT ?,?`, 
-    [userId, offset, config.listPerPage]
-  );
-  const data = helper.emptyOrRows(rows);
-
-  return {
-    ...data,
-  };
-}
-
-async function create(tasks) {
-  const result = await db.query(
-    `INSERT INTO tasks
-    (task, user_id) 
-    VALUES 
-    (?, ?)`,
-    [tasks.task, tasks.userId]
-  );
-
-  let message = 'Error in creating task';
-
-  if (result.affectedRows) {
-    message = 'New task created successfully';
-  }
-
-  return {
-    id: result.insertId,
-    task: tasks.task,
-    userId: tasks.userId,
-  };
-}
-
-async function update(id, tasks){
-  const result = await db.query(
-    `UPDATE tasks 
-    SET task=?
-    WHERE id=?`, 
-    [
-      tasks.task, id,
-    ]
-  );
-
-  let message = 'Error in updating task';
-
-  if (result.affectedRows) {
-    message = 'Task updated successfully';
-  }
-
-  return {message};
-}
-
-async function remove(id){
-  const result = await db.query(
-    `DELETE FROM tasks WHERE id=?`, 
-    [id]
-  );
-
-  let message = 'Error in deleting task';
-
-  if (result.affectedRows) {
-    message = 'Task deleted successfully';
-  }
-
-  return {message};
-}
-
-module.exports = {
-  getTasks,
-  create,
-  update,
-  remove,
+exports.getTasks = (req, res) => {
+  Task.findAll({ where: { user_id: req.params.userId } })
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message:
+          err.message || 'Some error occurred while retrieving tasks.',
+      });
+    });
 };
+
+exports.create = (req, res) => {
+  // Validate request
+  if (!req.body.task || !req.body.userId) {
+    res.status(400).send({
+      message: 'Content can not be empty!',
+    });
+    return;
+  }
+
+  const task = {
+    task: req.body.task,
+    user_id: req.body.userId,
+  };
+
+  // Save User in the database
+  Task.create(task)
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message:
+          err.message || 'Some error occurred while creating the Task.',
+      });
+    });
+};
+
+exports.remove = (req, res) => {
+  const id = req.params.id;
+
+  Task.destroy({
+    where: { id: id },
+  })
+    .then((num) => {
+      if (num == 1) {
+        res.send({
+          message: 'Task was deleted successfully!',
+        });
+      } else {
+        res.send({
+          message: `Cannot delete Task with id=${id}. Maybe Task was not found!`,
+        });
+      }
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: 'Could not delete Task with id=' + id,
+      });
+    });
+};
+
+exports.update = (req, res) => {
+  const id = req.params.id;
+
+  Task.update(req.body, {
+    task: req.body.task,
+    where: { id: id },
+  })
+    .then(num => {
+      if (num == 1) {
+        res.send({
+          message: 'Task was updated successfully.',
+        });
+      } else {
+        res.send({
+          message: `Cannot update Task with id=${id}. Maybe Task was not found or req.body is empty!`,
+        });
+      }
+    })
+    .catch(err => {
+      res.status(500).send({
+        message: 'Error updating Task with id=' + id,
+      });
+    });
+};
+

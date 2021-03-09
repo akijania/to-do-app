@@ -1,41 +1,63 @@
-const db = require('./db');
-const helper = require('../helper');
-const config = require('../config');
+const db = require('../models');
+const User = db.users;
 
-async function login(user) {
-  const userId = await db.query(
-    `SELECT id FROM users WHERE username = ? AND password = ?`,
-    [user.username, user.password]
-  );
-  let message = 'Error in log in';
-  if (userId == false) {
-    return message;
-  } else {
-    message = 'You are successfully log in';
-    return {userId, message};
+exports.login = async (req, res) => {
+  if (!req.body.username || !req.body.password) {
+    res.status(400).send({
+      message: 'Content can not be empty!',
+    });
+    return;
   }
- 
-}
-
-async function create(user) {
-  const result = await db.query(
-    `INSERT INTO users 
-    (username, password, email) 
-    VALUES 
-    (?, ?, ?)`,
-    [user.username, user.password, user.email]
-  );
-
-  let message = 'Error in creating user';
-
-  if (result.affectedRows) {
-    message = 'New user created successfully. Please log in';
-  }
-
-  return { message };
-}
-
-module.exports = {
-  login,
-  create,
+  User.findOne({
+    attributes: ['id'],
+    where: { username: req.body.username, password: req.body.password },
+  })
+    .then((data) => {
+      if (data === null) {
+        res.send({
+          message: 'There is no user with such username and password',
+        });
+      } else {
+        res.send({
+          data,
+          message: 'You are successfully log in',
+        });
+      }
+      
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message:
+          err.message || 'Some error occurred while log in.',
+      });
+    });
 };
+
+exports.create = (req, res) => {
+  // Validate request
+  if (!req.body.username || !req.body.password || !req.body.email) {
+    res.status(400).send({
+      message: 'Content can not be empty!',
+    });
+    return;
+  }
+
+  const user = {
+    username: req.body.username,
+    password: req.body.password,
+    email: req.body.email,
+  };
+
+  // Save User in the database
+  User.create(user)
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message:
+          err.message || 'Some error occurred while creating the User.',
+      });
+    });
+};
+

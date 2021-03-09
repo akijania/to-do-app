@@ -8,6 +8,7 @@ const config = {
     password: env.DB_PASSWORD,
     database: 'freedbtech_toDoApp',
     multipleStatements: true,
+    dialect: 'mysql',
   },
   listPerPage: env.LIST_PER_PAGE || 10,
 };

@@ -11,6 +11,7 @@
     "@types/react": "^17.0.2",
     "@types/react-dom": "^17.0.1",
     "axios": "^0.21.1",
+    "body-parser": "^1.19.0",
     "chai": "^4.3.0",
     "chai-http": "^4.3.0",
     "clsx": "^1.1.1",
@@ -31,13 +32,14 @@
     "react-test-renderer": "^17.0.1",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
+    "sequelize": "^6.5.0",
     "typescript": "^4.2.2",
     "web-vitals": "^1.0.1"
   },
   "scripts": {
     "start": "cd backend && nodemon server.js",
     "start-dev": "run-p start:*",
-    "start:backend": "cd backend && nodemon server.js",   
+    "start:backend": "cd backend && nodemon server.js",
     "start-silent": "run-p start > /dev/null",
     "start:react": "react-scripts start",
     "start-and-test": "run-p start-silent test ",
