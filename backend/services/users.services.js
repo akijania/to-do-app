@@ -23,12 +23,10 @@ exports.login = async (req, res) => {
           message: 'You are successfully log in',
         });
       }
-      
     })
     .catch((err) => {
       res.status(500).send({
-        message:
-          err.message || 'Some error occurred while log in.',
+        message: err.message || 'Some error occurred while log in.',
       });
     });
 };
@@ -51,13 +49,11 @@ exports.create = (req, res) => {
   // Save User in the database
   User.create(user)
     .then((data) => {
-      res.send(data);
+      res.send({ data, message: 'You are successfully registered' });
     })
     .catch((err) => {
       res.status(500).send({
-        message:
-          err.message || 'Some error occurred while creating the User.',
+        message: err.message || 'Some error occurred while creating the User.',
       });
     });
 };
-

@@ -43,9 +43,9 @@ class Login extends React.Component {
           return response.json();
         })
         .then(function (parsedResponse) {
-          if (parsedResponse.userId) {
-            window.location.replace(`/${parsedResponse.userId[0].id}`);
-            localStorage.setItem('token', parsedResponse.userId[0].id);
+          if (parsedResponse.data) {
+            window.location.replace(`/${parsedResponse.data.id}`);
+            localStorage.setItem('token', parsedResponse.data.id);
             alert(parsedResponse.message);
           } else {
             alert(

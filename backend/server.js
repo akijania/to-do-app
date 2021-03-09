@@ -26,11 +26,9 @@ app.get('/', (req, res) => {
 app.use('/users', users);
 app.use('/tasks', tasks);
 
-// app.get('*', (req, res) => {
-//   res.sendFile(path.join(__dirname, '../build/index.html'));
-// });
-
-
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../build/index.html'));
+});
 
 const server = app.listen(process.env.PORT || 8000, () => {
   console.log('Server is running on port: 8000');
