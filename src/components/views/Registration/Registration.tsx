@@ -1,23 +1,22 @@
 import React, { useState } from "react";
 import styles from "./Registration.module.scss";
 import { Link } from "react-router-dom";
-import clsx from "clsx";
 import settings from "../../../data/settings.js";
 import PropTypes from "prop-types";
 
-const Registration = ({ className }) => {
+const Registration = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
 
-  const handleChangeUsername = (event) => setUsername(event.target.value);
-  const handleChangeEmail = (event) => setEmail(event.target.value);
-  const handleChangePassword = (event) => setPassword(event.target.value);
-  const handleChangeRepeatPassword = (event) =>
-    setRepeatPassword(event.target.value);
+  const handleChangeUsername = (event:React.FormEvent<HTMLInputElement>) => setUsername(event.currentTarget.value);
+  const handleChangeEmail = (event:React.FormEvent<HTMLInputElement>) => setEmail(event.currentTarget.value);
+  const handleChangePassword = (event:React.FormEvent<HTMLInputElement>) => setPassword(event.currentTarget.value);
+  const handleChangeRepeatPassword = (event:React.FormEvent<HTMLInputElement>) =>
+    setRepeatPassword(event.currentTarget.value);
 
-  const submitForm = (event) => {
+  const submitForm = (event:React.FormEvent) => {
     event.preventDefault();
     const payload = {
       username,
@@ -27,7 +26,7 @@ const Registration = ({ className }) => {
 
     const url = settings.backend.url + "/" + settings.backend.endpoint.users;
 
-    const fetchOptions = {
+    const fetchOptions: RequestInit = {
       cache: "no-cache",
       method: "POST",
       headers: {
@@ -60,7 +59,7 @@ const Registration = ({ className }) => {
   };
 
   return (
-    <div className={clsx(className, styles.root)}>
+    <div className={styles.root}>
       <h2>Please register</h2>
       <form method="POST" onSubmit={(event) => submitForm(event)}>
         <label>

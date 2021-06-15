@@ -6,7 +6,6 @@ import PropTypes from "prop-types";
 import styles from "./UserPage.module.scss";
 import Login from "../Login/Login";
 import { Link } from "react-router-dom";
-import clsx from "clsx";
 
 import {
   fetchPublishedTasks,
@@ -16,14 +15,24 @@ import {
   editTaskRequest,
 } from "../../../redux/tasksRedux";
 
-const UserPage = ({ className }) => {
+const UserPage = () => {
   const dispatch = useDispatch();
-  const tasks = useSelector((state) => state.tasks.data);
+  interface RootState {
+    tasks: {
+      data: {id:string; task:string}[],
+      requests: [],
+      loading: {
+        active: boolean,
+        error: boolean,
+      },
+    },
+  }
+  const tasks = useSelector((state:RootState) => state.tasks.data);
   const [taskName, setTaskName] = useState("");
   const [token, setToken] = useState("");
 
-  const handleChangeTaskName = (event) => setTaskName(event.target.value);
-  const handleChangeToken = (token) => setToken(token);
+  const handleChangeTaskName = (event:React.FormEvent<HTMLInputElement>) => setTaskName(event.currentTarget.value);
+  const handleChangeToken = (token:string|null) => typeof token === 'string' && setToken(token);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -31,33 +40,33 @@ const UserPage = ({ className }) => {
     fetchPublishedTasks(token)(dispatch);
   }, []);
 
-  const handleRemoveTask = (taskId) => {
+  const handleRemoveTask = (taskId:string) => {
     dispatch(removeTaskRequest(taskId));
   };
 
-  const handleChangeTask = (id, event) => {
-    let name = event.target.value;
+  const handleChangeTask = (id:string, event:React.FormEvent<HTMLInputElement>) => {
+    let name = event.currentTarget.value;
     dispatch(editTask({ id, name }));
   };
 
-  const submitForm = (event) => {
+  const submitForm = (event:React.FormEvent) => {
     const data = {
       task: taskName,
       userId: token,
     };
     event.preventDefault();
     dispatch(addTaskRequest(data));
-    handleChangeTaskName("");
+    // handleChangeTaskName("");
   };
 
-  const handleEditTask = (event, id, task) => {
+  const handleEditTask = (event:React.FormEvent, id:string, task:string | undefined) => {
     event.preventDefault();
     dispatch(editTaskRequest({ id, task }));
   };
   if (!token) return <Login />;
   else
     return (
-      <div className={clsx(className, styles.root)}>
+      <div className={styles.root}>
         <section className={styles.tasksSection} id="tasks-section">
           <h2>Tasks</h2>
 

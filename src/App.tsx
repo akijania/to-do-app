@@ -7,8 +7,7 @@ import UserPage from "./components/views/UserPage/UserPage";
 import Login from "./components/views/Login/Login";
 import Registration from "./components/views/Registration/Registration";
 import NotFound from "./components/views/PageNotFound/PageNotFound";
-
-function App() {
+const App: React.FC = () => {
   return (
     <div>
       <Provider store={store}>
@@ -25,6 +24,6 @@ function App() {
       </Provider>
     </div>
   );
-}
+};
 
 export default App;

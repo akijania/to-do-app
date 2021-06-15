@@ -1,27 +1,26 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './Login.module.scss';
-import clsx from 'clsx';
 import settings from '../../../data/settings.js';
 import PropTypes from 'prop-types';
 
-const Login = ({ className }) => {
+const Login:React.FC = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleChangeUsername = (event) => setUsername(event.target.value);
-  const handleChangePassword = (event) => setPassword(event.target.value);
+  const handleChangeUsername = (event:React.FormEvent<HTMLInputElement>) => setUsername(event.currentTarget.value);
+  const handleChangePassword = (event:React.FormEvent<HTMLInputElement>) => setPassword(event.currentTarget.value);
 
-  const submitForm = (event) => {
+  const submitForm = (event:React.FormEvent) => {
     event.preventDefault();
     const payload = {
-      username,
-      password,
+      username: username,
+      password: password,
     };
 
     const url = settings.backend.url + '/' + settings.backend.endpoint.login;
 
-    const fetchOptions = {
+    const fetchOptions: RequestInit = {
       cache: 'no-cache',
       method: 'POST',
       headers: {
@@ -51,7 +50,7 @@ const Login = ({ className }) => {
   };
 
   return (
-    <div className={clsx(className, styles.root)}>
+    <div className={styles.root}>
       <h2>Please Log In</h2>
       <form method="POST" onSubmit={(event) => submitForm(event)}>
         <label>
